@@ -1,0 +1,76 @@
+#Printrbot Jr LCD Controller
+
+![Printrbot LCD kit](http://f.cl.ly/items/2g121d0l3a2V2h1x351v/Image%202013.11.03%2010%3A25%3A42%20PM.jpeg)
+Hoo boy, this one was a doozy.
+
+I bought the Printrbot Jr LCD kit so I could run my 3D printer without a computer. The printer comes stock with an SD card slot, however a computer is still needed to kick off the printing process before disconnecting and being truly autonomous. The LCD screen can read the SD card, start a print from it, run printer diagnostics and tweaks, and preheat the printer. It's actually pretty cool.
+
+I really thought this would be a pretty straight forward installation, plug and play if you will. Not quite correct! 
+I ran into a lot of problems with the firmware as the Printrbot Jr is a little different from the other printers. This is also a fairly early Printrbot Jr, v1.
+
+Before I explain why, I'll outline the steps necessary to get up and running.
+
+**Step 1 - Put the kit together.**  
+Takes about 5-10 minutes, depending on how excited you are.
+
+**Step 2 - Plug the LCD screen into the Printrboard.**  
+The expansion pin set you want to look for is EXP2. It should be more towards the middle of the board, not on the bottom edge like EXP1. The ribbon cable should be pointing down when you plug it in. Turn on your printer at this stage and if the LCD screen glows blue, you've plugged it in the correct way. If not, try swapping each end around until you get it glowing. See the disagram below for the EXP2 location:  
+![Printrboard Diagram](file://~/active/posts/printrbschemcrop.jpeg)
+
+**Step 3 - Flash the firmware**  
+In order to get the LCD screen and controller going, new firmware is needed for the Printrboard. Flashing the board is actually pretty straightforward.
+[Follow the instructions here](https://dl.dropboxusercontent.com/u/68081994/printrbot/Printrbot%20Firmware.pdf) with [my precompiled hex for the Junior](https://github.com/suziam/Marlin/tree/printrbot-jr). 
+You can ignore the section about compiling the software in the instructions, unless you want to put extra changes in Marlin first. 
+
+**Step 4 - Reset your EEPROM**  
+Omg this is super important! I had some mysterious stepping issues on one axis prior to doing this. To do so, navigate to 'Prepare' on the LCD controller, then scroll down to 'reset factory'. Select that option, then unplug your printer, wait 10 seconds, then turn it back on again. Done! You can also just send an M502 command (which is the gcode for restting factory EEPROM) to your printer from your chosen 3D printing software also (Pronterface, Repetier Host etc etc).
+
+**Troubleshoot tip:** if after flashing the firmware the screen remains blank, twiddle the contrast screw (next to the push pot) and see if you end up with text appearing. This happpened to me, and I was scratching my head until [@tmpvar](http://twitter.com/tmpvar) reached over with a mini screwdriver, bless.
+
+Well that seemed easy! So what went wrong? The trouble for me began with the precompiled firmware. 
+
+See, the Printrbot Jr has one small difference compared to the rest of the Printrbot family. The Y-axis seems to be inverted when you flash with any of the latest firmware which includes the LCD controller firmware flavour. I suspect this is because Brook might have originally shipped a bunch with the Y belts threaded in a different direction than later versions. 
+
+The following compilations won't work as they will reverse the y-axis on some Juniors:  
+* [Printrbot LCD Extruder Firmware on Printrbot's Github repo](https://github.com/Printrbot/Printrbot-LCD-Extrudr-Firmware)  
+* [Printrbot Junior Firmware on Printrbot's Github repo](https://github.com/Printrbot/Printrbot-Junior-Firmware)  
+* [Printrbot's latest 'unified' firmware](https://twitter.com/printrbot/status/363486460126560256)
+
+So why not just physically reverse the Y-axis, you may ask? On principle, I wanted to solve this with software. I could have had to either swap out the belt to run in the opposite direction (which is a pain in the butt to do on the original y-axis 'sandwich', seriously), or snap off the stepper motor connection tab on the Printrboard in order to be able to jam the connector back on in the wrong orientation. All I had to do was find the source to the correct firmware and then just reverse the y-axis, right? 
+
+Turns out, the only firmware I could find that the LCD controller worked okay with, was not open source. The closest open source version I could find was PxT's Marlin fork on github, specifically the [lcd-experimental branch](https://github.com/PxT/Marlin/tree/lcd-experimental). This experimental branch had a bunch of wrong pin mappings, which I am assuming that are unique to the Printrbot Jr original. The Z axis stepper pins were overridden by other mappings for example. When you look at the schematic though, the pins marked on it do not translate to the actual pins you set in the firmware. 
+
+Huh? 
+
+After hunting around further, I found [this beautiful spreadsheet with pin mappings by jcrocholl](https://docs.google.com/spreadsheet/ccc?key=0AihVdu60WUfgdDE1M2F4Z3FIQV9ZQllqVk5zcFpCVkE#gid=0) and [the thread that started this spreadsheet](https://github.com/ErikZalm/Marlin/pull/329). For even more information, also check out [the Printrbot Talk forum thread](http://www.printrbottalk.com/forum/viewtopic.php?t=4891). I ended up using the process of elimination to find the correct pins that mapped to the EXP2 slot on the Printrboard that I have. They are set in the Marlin firmware [on my fork](https://github.com/suziam/Marlin/tree/printrbot-jr).
+In case you're interested, here are the correct pin mappings for EXP2 and the Z stepper below:  
+``
+// EXP2
+define pin1 = 9
+define pin2 = 8  
+define pin3 = 7
+define pin4 = 6
+define pin5 = 5  
+
+// Z axis
+define pin6 = 39
+define pin7 = 40  
+```
+
+If anyone finds another working version of Marlin, please let me know. I hope for those who have had similar issues that my precompliation helps them.
+
+Here's a video below of the LCD controller working:
+
+So what's next? As the Junior is quite a small and elegantly minimal machine, I'm not a huge fan of how bulky and separate the LCD controller looks in the wood kit. I'd like to design [something similar to this](http://www.thingiverse.com/thing:172139) and model a simple bracket on the top so that I can just hook it over the edge of the y-axis sandwich. I think this would be a great place to put the LCD screen, and have the printer still be self contained and ultra portable.
+
+**Conclusion**  
+Maybe I should have just swapped the belt orientation, *shrugs*. However I learned way more by digging into the software side of things instead.
+
+Thanks also to [@tmpvar](http://twitter.com/tmpvar), who joined me on this head scratching expedition one very nerdy Sunday. It was a great help to be able to bounce ideas between us, and he's a much smarter cookie than me. I learned so much about bootloaders and firmware.
+
+[Printrboard Schematic](http://help.printrbot.com/Guide/Printrboard+Schematic/15)
+
+A bunch of images:
+![Printrboard Diagram](http://f.cl.ly/items/2i2j07422b3m3b0n2u3V/Image%202013.11.03%2010%3A23%3A30%20PM.jpeg)
+
+
