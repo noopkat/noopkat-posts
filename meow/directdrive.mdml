@@ -9,16 +9,16 @@ Here are the bits I was missing:
 
 I ended up just guessing the assembly, and got it attached to the Printrbot. I fed in some filament, turned on the printer and tried test extruding. To my glee, it extruded like a beauty for about 30mm, then made gut wrenching jamming noises and stopped extruding.
 
-I had two theories. Either there was a blockage in the hotend, or the hobbed bolt was not feeding correctly. I couldn't imagine why there'd be a blockage, so I started trying to correct the possible feeding issue.
+I had two theories. Either there was a blockage in the hotend, or the hobbed bolt was not feeding correctly. I couldn't imagine why there'd be a blockage (I was printing with the old exruder assembly just hours prior), so I started trying to correct the possible feeding issue.
 
 I had a look on Thingiverse for some filament feed guides to fit the extruder assembly. I found some that looked like they'd work. They were designed for the Printrbot Simple, however the direct drive extruder on those machines are predictably similar.
 
-I printed the following pieces:  
+I printed the following pieces [at my local hackerspace](http://synshop.org):  
 ![picture of 3D printed feeders]()
 
 The lower feed guide installed like a dream. After trying to fit the feed guide that sits on top, it became apparent that it was not going to fit due to limited room. I ended up dismantling the extruder, and cutting the ends off the middle pieces to make room for the top feed guide.
 
-After cutting:   
+After cutting ([@tmpvar](http://twitter.com/tmpvar)'s handiwork with a handsaw):   
 ![picture of cut pieces]()
 
 After putting the extruder back together again, everything fit, and the filament was noticably easier to guide down into the hotend. I turned on the printer, heated her up, and test extruded some filament. The horrible jamming noise still persisted. So I could rule out feeding issues now. On to the next theory.
@@ -27,7 +27,7 @@ What was suspicious was that retraction was perfect. The hobbed bolt was grippin
 
 There was some copper wire on hand (once again, thanks [@tmpvar](http://twitter.com/tmpvar)!) so we fed the wire through the hot end from the tip upwards. We could definitely feel something solid sticking inside, towards the middle of the hotend tunnel.
 
-After unscrewing the tip and pushing the filament through manually, a big globby piece of plastic fed out. It looked like a flake of wood had fallen into the hotend when I was screwing the wooden extruder pieces together. Here is the offending blockage below (it is small, but mighty!):  
+After unscrewing the nozzle tip and pushing the filament through manually, a big globby piece of plastic fed out. It looked like a flake of wood had fallen into the hotend when I was screwing the wooden extruder pieces together. Here is the offending blockage below (it is small, but mighty!):  
 ![picture of wood blockage]()
 
 The tip was reattached to the hotend, printer warmed up again, and huzzah! Perfect feeding and plastic extrusion.
@@ -36,6 +36,7 @@ Here is a video of the printer back up and running with new fan mount and extrud
 
 So pretty!
 
-Sidenote - this also happened recently:
+Sidenote - this also happened recently:  
+![picture of broken usb connector in palm of hand]()
 
 Yep, that's the USB connector, broken off the board. But that story is for another time.
