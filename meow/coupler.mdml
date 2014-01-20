@@ -1,0 +1,33 @@
+I've always admired how Brook Drumm manages to bring down the cost of his Printrbot range. In particular, he tries to use laser cut wood as much as he can as it's fast to produce, and cheap.
+
+One of the wooden features on my Printrbot Jr is the Z-axis coupler, that binds the screw rod to the stepper motor. Two pieces of wood bind the rod and the shaft together. It works well enough, however it requires some fiddling to keep it cailbrated, and the rod takes a beating when I'm fitting it into my Pelican case.
+
+This is it:
+
+{<1>}![wooden coupler](/content/images/2013/Dec/woodencoupler.jpg)
+
+A while ago I printed a [plastic coupler](http://www.thingiverse.com/thing:94815) to replace it, but that wasn't perfect either:
+
+{<2>}![plastic coupler](/content/images/2013/Dec/plasticcoupler.jpg)
+
+When Eli and I first met, he mentioned that he should lathe me a metal coupler. I batted away this idea because I was being too proud and defensive of my little machine. I eventually came around to the idea though, haha! Sorry Eli.
+
+I've always wanted to learn how to use a lathe, so this seemed like the perfect project to get started. Here is the initial sketch we worked on:
+
+{<3>}![Eli sketch](/content/images/2013/Dec/couplesketch-1.jpg)
+
+Eli was an awesome teacher. He got me to do a little bit of everything on the coupler, which taught me a variety of skills like tapering, milling/drilling, cutting down the diameter of the stock, and adding decorative details. We had a great time working on this one together.
+
+Here is a video of me tapering an edge:
+
+The first prototype looked great, but the motor shaft fitted too loosely.
+
+{<4>}![first coupler](/content/images/2013/Dec/firstcoupler.jpg)
+
+Back to the drawing board! Eli recreated the coupler, drilling the shaft tunnel on the mill instead. This worked a lot better, and gave a tighter fit.
+
+I thought it would look prettier if we cut some decorative lines into the barrel. I had a lot of fun learning how to precisely do this, and was happy with the final result. Here is the finished coupler installed on the printer, complete with set screws to prevent any slipping:
+
+{<5>}![final coupler](/content/images/2013/Dec/finalcoupler.jpg)
+
+After a quick test print, I'm super happy with the results. It's a lot sturdier, and improves the accuracy of the Z-axis. Thanks again to Eli for all of his help and good ideas!
