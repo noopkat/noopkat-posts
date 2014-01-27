@@ -1,0 +1,21 @@
+# P.U.R.R. - Personal Ultimate Reassurance Response
+
+A few weeks ago I attended the AT&T Dev Summit Hackathon at Palms Casino, Las Vegas. I had a tonne of fun. It was the largest hackathon I've attended. There were 106 teams in the end, and the presentations (90 seconds each), took 6 hours to get through!
+
+Naturally I was kinda terrified to be in a room of so many people (and be a minority), so I just put my head down and started working. My goal for the weekend was to create a wearable piece from end to end. Yep, that meant producing the housing, soldering a bunch of stuff, and then programming the wearable and the server it connects to.
+
+I am one of those cheeky people who choose the technology first, and then bend an idea around it to fit. I know that's not what you're meant to do, but whatever. I wanted to use the excellent Tinyduino from Tiny Circuits, and make a bracelet that did something. The rules from AT&T were that you needed to use one of their API's in some shape or form. After checking out what a free developer account gets you, I decided to use their in-app messaging service. Afterall, a bracelet that can send messages to your phone is pretty cool, right? This is where the idea for PURR blossomed.
+
+My day to day life is generally consumed by both social anxiety, and generalised anxiety. It saps my energy and brain capacity managing the symptoms, and also pretending to be normal at work. I try so hard in fact, that most people I meet have no idea the amount I suffer every day, or are surprised to learn that I'm on medication.
+
+Generally on a bad day, I need to sleep off my anxiety. Otherwise, I pace tracks in my carpet at home and resort to coping mehchanisms what aren't always healthy. It's incredibly frustrating, as I always want to get a lot done in my personal time, and often have to accept that I'll never really be able to run at full capacity like other lucky people can.
+
+One day when I was having a particularly bad night, I was insistent on staying awake and riding it out. A friend of mine tweeted this picture at me:
+
+It is a capybara attempting to cuddle with a cat. Sensory overload hit me, and I started breaking down the picture. "Look how genuine that capybara is being, he loves that cat," and "the cat is having none of it," and "I wonder how many times this happens, and if the cat is ever ok with a giant ginea pig wanting a cuddle", and "do you think that closed eyes means that a capybara is content, or being aggressive, or is just getting ready to dodge claws from that cat?" etc etc. This went on for several minutes. By the time I "came to", I realised that my panic attack has eased ever so slightly. I actually felt better.
+
+Now, something like looking at cute pictures is certainly never going to fix someone's anxiety, at least not in my case. However, what if you could let yourself know in advance if a panic attack was coming on, so you could take a moment to be mindful and aware?
+
+My hackathon idea was complete. I could make a bracelet that monitors your pulse. If it picks up on the pulse becoming rapid (assuming you don't wear this while exercising), it can warn you that a panic attack may be coming on. The bracelet could text you with a distracting picture to remind you that everything is ok.
+
+I mentioned that I wanted to create the bracelet itself at the hackathon, so I brought my trusty ultra portable Printrbot Junior. It was freshly upgraded with a new coupler, extruder and controller board recently, so I was excited to put it through its paces.
