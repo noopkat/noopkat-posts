@@ -4,13 +4,15 @@ A few weeks ago I attended the AT&T Dev Summit Hackathon at Palms Casino, Las Ve
 
 Naturally I was kinda terrified to be in a room of so many people (and be a minority), so I just put my head down and started working. My goal for the weekend was to create a wearable piece from end to end. Yep, that meant producing the housing, soldering a bunch of stuff, and then programming the wearable and the server it connects to.
 
-I am one of those cheeky people who choose the technology first, and then bend an idea around it to fit. I know that's not what you're meant to do, but whatever. I wanted to use the excellent Tinyduino from Tiny Circuits, and make a bracelet that did something. The rules from AT&T were that you needed to use one of their API's in some shape or form. After checking out what a free developer account gets you, I decided to use their in-app messaging service. Afterall, a bracelet that can send messages to your phone is pretty cool, right? This is where the idea for PURR blossomed.
+I am one of those cheeky people who chooses the technology first, and then bends an idea around it to fit. I know that's not what you're meant to do, but whatever. I wanted to use the excellent Tinyduino from Tiny Circuits, and make a bracelet that did something. The rules from AT&T were that you needed to use one of their API's in some shape or form. After checking out what a free developer account gets you, I decided to use their in-app messaging service. Afterall, a bracelet that can send messages to your phone is pretty cool, right? This is where the idea for PURR blossomed.
 
-My day to day life is generally consumed by both social anxiety, and generalised anxiety. It saps my energy and brain capacity managing the symptoms, and also pretending to be normal at work. I try so hard in fact, that most people I meet have no idea the amount I suffer every day, or are surprised to learn that I'm on medication.
+My day to day life is generally consumed by both social anxiety, and generalised anxiety. It saps my energy and brain capacity managing the symptoms, and it's pretty exhausting pretending to be normal at both work and play. I try so hard in fact, that most people I meet have no idea the amount I suffer every day, or are surprised to learn that I'm on medication.
 
-Generally on a bad day, I need to sleep off my anxiety. Otherwise, I pace tracks in my carpet at home and resort to coping mehchanisms what aren't always healthy. It's incredibly frustrating, as I always want to get a lot done in my personal time, and often have to accept that I'll never really be able to run at full capacity like other lucky people can.
+Generally on a bad day, I need to sleep off my anxiety. Otherwise, I pace tracks in my carpet at home and resort to coping mechanisms what aren't always healthy. It's incredibly frustrating, as I always want to get a lot done in my personal time, and often have to accept that I'll never really be able to run at full capacity like other lucky people can.
 
 One day when I was having a particularly bad night, I was insistent on staying awake and riding it out. A friend of mine tweeted this picture at me:
+
+![capybara and cat]()
 
 It is a capybara attempting to cuddle with a cat. Sensory overload hit me, and I started breaking down the picture. "Look how genuine that capybara is being, he loves that cat," and "the cat is having none of it," and "I wonder how many times this happens, and if the cat is ever ok with a giant ginea pig wanting a cuddle", and "do you think that closed eyes means that a capybara is content, or being aggressive, or is just getting ready to dodge claws from that cat?" etc etc. This went on for several minutes. By the time I "came to", I realised that my panic attack has eased ever so slightly. I actually felt better.
 
@@ -19,3 +21,29 @@ Now, something like looking at cute pictures is certainly never going to fix som
 My hackathon idea was complete. I could make a bracelet that monitors your pulse. If it picks up on the pulse becoming rapid (assuming you don't wear this while exercising), it can warn you that a panic attack may be coming on. The bracelet could text you with a distracting picture to remind you that everything is ok.
 
 I mentioned that I wanted to create the bracelet itself at the hackathon, so I brought my trusty ultra portable Printrbot Junior. It was freshly upgraded with a new coupler, extruder and controller board recently, so I was excited to put it through its paces.
+
+The first thing I started on was designing the bracelet in Blender. I printed out a couple of quick primitive 'boxes' to see if they were the correct dimensions. The first test printed really well, and the Tinyduino fit!
+
+![First prototype of housing]()
+
+Next I tried to round out the design a little, and I included a hole in the bottom for the battery to poke out, slimming down the profile of the housing and allowing for easy battery replacement. By now it was after lunchtime, so I just stuck with an unfinished design (so bulky!) and moved on to soldering. After soldering the pulse sensor to the Tinyduino prototyping board, I was ready to start coding.
+
+I needed two Arduino libraries: the pulse sensor lib, and the Tinyduino wifi module lib, which just happens to be borrowed from one of Adadruit's wifi modules. The Arduino sketch is still a little sloppy, but it got the job done. Effectively the Tinyduino seeks out a configured wifi network. Once it connects, it starts to measure your heartbeat. If the heartbeat rate stays above 90 BPM for a few minutes, it'll kick off a request to a server to send the message to the recipient's phone.
+
+I was obviously missing the server at this point, so this is where I moved next. I threw up a nodejs file on my personal hosting to handle a POST request, and upon this it hits the AT&T API. After staying up til 2am with an AT&T developer (thank you, thank you, kind gentleman) we got the image sending to my phone. In the end we had to send it as base64 and hardcoded a bunch of stuff, but hey this was a hackathon!
+
+The next day was about assembling it all together. I ended up modifying some watch band links from Thingiverse to have holes tunneled through them. I printed a bunch of them out and strung them together with some elastic threaded through each link.
+
+Here is the final bracelet, finished up just twenty minutes before the demos began:
+
+![bracelet]()
+
+![bracelet 2]()
+
+Tony Rappa kindly filmed my demo, you can watch it below:
+
+youtube here
+
+The AT&T Dev Summit Hackathon was super fun, but I definitely didn't feel like I belonged there. It was a little too corporate for my liking, and the sheer amount of people there made me a little uneasy. Everyone was so lovely though, and I made some new friends from all over the US. There were some really cool projects demoed, I felt pretty inspired overall.
+
+You can have a look at the rather fragile hackathon code on [Github](http://github.com/noopkat/purr). The 3D files are on Thingiverse.
