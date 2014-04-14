@@ -1,0 +1,76 @@
+It's been just over a year since I started fiddling with my 3D printer. The Printrbot Junior v1 was serious bang for buck when I bought it, coming in at a mere $400 + shipping. However I've had a lot of fun with improving the quality of prints since I bought it as a 2012 Christmas present to myself.
+
+The goals I had over the last year were the following:
+
+1. Improve layer placement and reduce 'wobble' on the z-axis.
+2. Produce prints that are 100% accurate in measured size.
+3. Coax the printer to print as reliably and consistent in quality as possible, with minimal hardware or software errors.
+
+I decided to use my nemesis print, the [Cushwa Owl](http://www.thingiverse.com/thing:18218) as a litmus test to achieve this. There were a couple of reasons for this:
+1. I love owls.
+2. I have has enormous trouble reliably printing this model in the past.
+3. It's commonly used by others to test printer ability.
+
+Let me show you the trouble in the past that I've had with this darn owl:
+
+![owl fails](http://f.cl.ly/items/1G1N2y3e3c1U0L2V3z0a/owlfails.jpg)
+
+This is only a small sampling of failures, I threw many of them in the bin in a rage at the time. Most of them were either corrupted gcode issues, or the y-axis step slipping. The owl at the back stuck so fast to the bed, that I ruined my print bed and cut my hand puling it off.
+
+Here are the current results below. Both owls are _approximately_ 80mm high. The owl on the left was printed March 2013, and the owl on the right April 2014 (last week):
+
+![owl comparison 1](http://f.cl.ly/items/0y3o243m0w2l340n1H3g/daylightowl3.jpg)
+
+![owl comparison 2](http://f.cl.ly/items/0y0k1D0U0A0L3Y011a2t/daylightowl2.jpg)
+
+![owl comparison 3](http://f.cl.ly/items/1S101X0m1g2L2x1F0204/daylightowl1.jpg)
+
+I believe the most dramatic comparison above is the side view. You can see I've made good headway at stablising the z-axis wobble. There are details on the right owl that I never knew exisited on the model until I achieved a jump in print quality. The layers line up better, and the proportions are also spot on accurate. The original owl on the left was too wide on the z-axis, as the y-axis was actually incorrectly calibrated.
+
+A more detailed breakdown of what I tweaked over the past year:
+
+### Belt and pulley upgrades:  
+The first upgrade I did was to swap out the pulleys and belts on the X and Y axis' with finer and better quality ones. I ended up using [alluminium GT2 20 tooth pulleys](http://www.ultibots.com/gt2-timing-pulley-20-tooth/), and matching [GT2 timing belts](http://www.ultibots.com/gt2-timing-belt-1164mm/), both bought from the friendly peeps at [Ultibots](http://ultibots.com). Replacing these is a simple but fiddly matter of taking apart each bearing and pulley assembly. Make sure you secure each belt tightly - you should be able to strum it and produce a musical note. Both axis' run nice and smooth now.
+
+### Calibration, calibration, calibration:
+If you're using GT2 belts and pulleys (20 tooth), the calibration for both X and Y is M92 X80 and M92 Y80. **Math**. Eli showed me the light after I'd been manually calibrating with calipers, tsk tsk. You can see that the owl on the left has different (wrong) proportions to the one on the right.
+
+### Hotend upgrade:
+Do yourself a favour and buy a hotend that takes 1.75mm filament. My original hotend took 3mm. A chunkier filament is more prone to kinks, and the heartbreaking "snap" as a tangle breaks the filament off mid print. The largest nozzle size you should use is .4mm. Go lower if comfortable.
+
+### Stablise your filament feed:
+Depending on your printer and extrusion setup (Bowen, spring loaded etc), there's some small tweaks you can make to ensure your filament feeds cleanly and consistently. The pieces I installed for my extruder assembly are covered in [this blog post](http://meow.noopkat.com/printrbot-jr-direct-drive-extruder-upgrade/).
+
+### Fan upgrade:
+I installed a fan to point at my printbed while printing. This allows each layer to cool more quickly. This allows for faster printing, and better looking shells. You can use gcode to control when the fan turns on (I have it off for the first layer to ensure it 'sticks' to the print platform) and how fast it blows for different situations. [The blog post for this upgrade is here](http://meow.noopkat.com/printrbot-jr-direct-drive-extruder-upgrade/).
+
+### Sort out your Z coupler:
+I had great results swapping out my wooden sandwich coupler with this [3D printed one here](http://www.thingiverse.com/thing:94815). I then went on to [mill one out of alluminium](http://meow.noopkat.com/a-fancy-new-coupler-for-the-printbot-jr/). Having a good quality, and well aligned coupler is very important if you want each printed layer to align with the one below. The job of the coupler is to bind the motor controlling the Z axis to the threaded rod, which turns to adjust the height of the exrtuder. Make sure it's straight and doesn't 'wobble' when you test the Z axis. I still have some very minor wobble, but it's barely noticable. Jury is still out on whether a rigid or flexible coupler is best, go with what you find works best for your printer.
+
+### Get your bed level and your Z end stop perfect:
+Oh my god I cannot express this enough. Get your bed as level as possible, and tune that extruder to home a paper's width above the bed surface. This is the single most important adjustment you can make to ensure your printer makes it beyond the first 2 layers of deposition first time, every time. If you're badass, get firmware controlled auto bed levelling going. This is included in the latest version of Marlin. It's next on my list.
+
+### Filament temperature:
+The broad recommendation for PLA printing temperature is 180&deg;C. That temperature is baked into firmware and slicing software as a default. You should play with higher temperatures to see if it provides you with any benefit in printing quality. This is of course going to vary from filament to filament, colour to colour. The owl on the left was printed at 180&deg;C, the right owl was 210&deg;C.
+
+### Bed adhesion:
+I started out using 3M blue painters tape. I found that my prints stuck *too* well to my print bed. I would damage both them and the printer (and my own flesh!) trying to prise finished prints off. I now use the 3M lime green 'hard to stick surfaces' (yeah I know, what?) painters tape, and it sticks well without supergluing your prints to the bed. Peeling prints off the bed is now way easier. No more animal feet breaking off at the ankles, or bent raspberry pi cases.
+
+### Vibration:
+This is one problem I have yet to solve, but vibrations caused by the frequencies of the stepper movements can be seen on the surface of your prints. Not to mention it produces an incredibly annoying noise! I improved the problem slightly by adjusting the speed upwards when printing solid infill and travelling. In future, I'll be trying a cork stepper dampener [like this one](http://forums.reprap.org/read.php?179,286248) on the x motor, as it's directly underneath the print bed.
+
+### Use a decent slicing application:
+For most of the year, I was using Slic3r. Slic3r is a geek delight, because you can tweak anything and everything to do with your print jobs. Recently though I started looking at other slicer packages, and have settled on Cura. I've noticed that Cura slices *very* fast, allows cool python plugins, and has much more efficient toolpath generation. Better toolpaths = better quality and faster prints. Some of the shit I saw Slic3r do with toolpaths, I tell you what. Thanks to Eli for passing on his obsession and dismay at inefficient toolpathing, there is no going back now.
+
+### Conclusion:
+With the above improvements to my machine, I'm now able to just hit 'print' and experience the delight of seeing the Printrbot get to work. I rarely ever hold my breath for the first 10 layers anymore (unless I'm printing chainmail!) and I'm proud to show off my prints. There's still some improvements to be made, but for now I just want to take a break and enjoy using my printer.
+
+How are thew two owls doing these days? Well, they're getting along just fine:
+
+![owlfight1](http://f.cl.ly/items/0e0z11211f3c1O3c0S0C/owlfight2.jpg)
+
+Just kidding! They kinda hate each other sometimes:
+
+![owlfight2](http://f.cl.ly/items/2v323M3C2Y113t0p1I10/owlfight1.jpg)
+
+Happy printing!
