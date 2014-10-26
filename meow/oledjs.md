@@ -48,13 +48,13 @@ You can also:
 
 Oled-js supports both I2C and SPI protocols. I'd recommend I2C, as oled-js uses the Arduino Firmata library (via Johnny-Five) and there is no current support for fast SPI within Firmata. My library just flips pins over the USB cable connection to get SPI happening, which is a huge bottleneck to getting those pixels updating on the screen as fast as possible. See the [oled-js readme](https://github.com/noopkat/oled-js/blob/master/README.md) for more in context information on how to use each protocol.
 
-If you have a need for it, use it, play with it, and if you break it, open an issue for me :)
+If you have a need for it, have a play! If you break it, open an issue for me :)
 
 ### What did I learn?
 
 Oh man, a lot of things. I've never really taken the opportunity to explore or teach myself some of the basic things that go on closer to the metal of how computers work in general. This project really got me started down the path, which while mysterious at times is completely fascinating. I've never had a reason to stumble into this stuff before (I did not study computer science, where it is often dropped on you) but now that I have I'd like to explore it even more.
 
-But it's time I passed on all of this stuff to YOU! So below, is mostly everything I now know after publishing oled-js.
+But it's time I passed on this stuff to YOU! So below, is some of the things I now know after publishing oled-js.
 
 ### How do the pixels work on an OLED screen?
 
@@ -68,7 +68,7 @@ Pretty straightforward. Now, if you place some pixels on the screen, you can ref
 
 ![screen 2](http://cl.ly/image/1M272I3w471K/oled-screen02.png)
 
-The first pixel is located at x0, y0, or 0,0 for short. The second pixel is located at x7, y10, or 7,10 for short. Remember that we start counting across and down from 0, not one.
+The first pixel is located at x0, y0, or 0,0 for short. The second pixel is located at x7, y9, or 7,9 for short. Remember that we start counting across and down from 0, not 1.
 
 In order to tell the screen what to display, we manipulate an object called a 'framebuffer'. This framebuffer is simply an array containing all of the pixel data. Each pixel is either a 0 or a 1. A 0 dictates that the pixel is 'off', and a 1 indicates that pixel should be 'on'. We send this framebuffer (either all of it at once or only part of it) as data to the OLED screen, which can then interpret it and display our pixels correctly on the screen. We prime the screen for the data with some other commands first, but that's not important to dive into right now.
 
@@ -78,19 +78,45 @@ Our OLED screen accepts our framebuffer in the form of individual bytes. So, eac
 
 One byte contains 8 bits. Each bit is either a 0, or a 1. So a byte is binary! A visual example of a byte is 0010110.
 
-Hang on just one tick, you say. If a byte contains 8 bits, and there are 144 bytes in our framebuffer, that would be **144 * 8**, which equals... **1152**! Shut the front door! So, does this mean that one pixel is represented in our framebuffer as one bit? Yep, you got it. Therefore, there are 8 pixels of data in each byte of our framebuffer. And remember how we said that a pixel is either a 0 or a 1? So is a bit! This is a really effective way of storing our information.
+Hang on just one tick, you say. If a byte contains 8 bits, and there are 144 bytes in our framebuffer, that would be **144 * 8**, which equals... **1152**! Shut the front door! Isn't that the *same* number as the total amount of pixels on our screen? Does this mean that one pixel is represented in our framebuffer as one bit? Yep, you got it. 
 
-So how does this work? How do you figure out which byte in our framebuffer contains our pixel? This is where 'pages' come in, but we'll cover that in a second.
+Therefore, there are 8 pixels of data in each byte of our framebuffer. And remember how we said that a pixel is either a 0 or a 1? So is a bit! This is a really effective way of storing our information.
 
-A byte as we just discovered, has 8 pixels in the form of bits. A byte of pixels is painted on the screen in a downwards fashion, taking up only one column. The following pixels highlighted below are a representation of the first byte in our framebuffer array:
+But how does this work? How do you figure out which byte in our framebuffer contains our pixel? This is where 'pages' come in, but we'll cover that in a second.
+
+A byte as we just discovered, has 8 pixels in the form of bits. A byte of pixels is painted on the screen in a downwards direction, taking up only one column. The following pixels highlighted below are a representation of the first byte in our framebuffer array:
 
 ![one byte](http://cl.ly/image/1g1e3M020W3F/oled-screen03.png)
 
-The byte above has no pixels turned on in it. Therefore, the byte would read **00000000** in our framebuffer array. A shorthand of writing this would be hex format 0x00. 
+The byte above has no pixels turned on in it. Therefore, the byte would read **00000000** in our framebuffer array. A shorthand way of writing this would be hex format **0x00**. 
 
 But what if we put some pixels in there?
 
 ![screen 4](http://cl.ly/image/2Y0E420p0N0t/oled-screen04.png)
 
 Above shows the bit values within our byte, when 3 pixels have been filled in. So what would our byte value be now? The answer is **00011101**. Notice anything? "It's written in reverse to what I was expecting!" you say. Well spotted! Why? We'll cover this in more depth later, but essentially the positions of our bits need to be counted from right to left.
+
+To sum up: pixels are painted on the screen in sets of 8 bits, within a byte. Each byte is painted in the next column over from the last. 
+
+Because a byte is reponsible for writing muliple pixels in a vertical fashion, a concept known a row or 'page' enters. Each page is 8 pixels high. Our first byte is in page 0. See the picture below to understand:
+
+![screen 5](http://cl.ly/image/2t1D2l2S000v/oled-screen05.png)
+
+In our example screen we're using, to write an entire row or 'page' of pixels will use 48 bytes. This is the same number as the width of our screen. The next row or 'page' will need the next 48 bytes in our framebuffer array to complete it, and finally the last set of 48 bytes will take care of the last row or 'page'.
+
+I add another byte in the picture below, which is located in page 1:
+
+![screen 6](http://cl.ly/image/2Q2A0m373W2V/oled-screen06.png)
+
+What number byte in our framebuffer is this new byte I added? You can count from left to right in the diagram starting from byte 0. It is byte 55. 
+
+To arrive at the same answer you can also assume 48 bytes in page 0, then start counting across from page 1. Add the result to 48 from there. Always subtract 1 of course, due to our index starting at 0.
+
+Bonus point: what is the value of our new byte?  
+.  
+.  
+.  
+
+(the answer is **10111110**)
+
 
