@@ -1,6 +1,6 @@
 post about oledjs
 
-http://www.garrettbartley.com/graphpaper.html
+
 
 It all started with one of those projects you NEVER actually start on, let alone complete. You know the type I mean.
 
@@ -173,17 +173,17 @@ In this example, we're going to shift the bits in the byte right until bit 5 is 
 Let's work with this byte - **01100101**, or **0x65**. We'll shift the bits over 5 places so that the bit at position 5 is now sitting at position 0:
 
 ```javascript
-var byte = 0x65;
-var newByte = (byte >> 5); // 00000011
+var byte = 0x65; // 01100101
+var newByte = byte >> 5; // 00000011
 ```
 
 A total of 5 zeros will now be shifted in from the left, forcing the bits to the right. Bit 5's position is now position 0.
 
-Now, we're going to use the '&' operator to compare this bit against the mask of 1. The '&' operator in bitwise will return a 1 if the bit in line with it is equal to 1. It will return a 0 if not equal to a 1. This may not make sense if you have not read the suggested resources mentioned earlier.
+We're next going to use the '&' operator to compare this bit against the binary mask of 1. The '&' operator in bitwise will return a 1 if the bit in line with it is equal to 1. It will return a 0 if not equal to a 1. Comparing anything against a 0 will return a 0. This may not make sense if you have not read the suggested resources mentioned earlier.
 
 ```javascript
-var byte = 0x65;
-var newByte = (byte >> 5); // 00000011
+var byte = 0x65; // 01100101
+var newByte = byte >> 5; // 00000011
 var busy = newByte & 1; // 1
 ```
 
@@ -198,7 +198,14 @@ The comparison can be represented visually. The top number is the mask (1 in bin
 
 As you can see, the result is equal to the binary representation of 1. So our busy byte is equal to 1 (the chip is busy!).
 
+This exact approach can be used to look up the value of *any* pixel in your framebuffer. If you can find the byte it is in, and the bit position (both calcs are pretty simple), you can use the above method to pull it out.
 
 
-----
-Lastly: thank you to [Rick Waldron](https://github.com/rwaldron) and the [other amazing authors](https://github.com/rwaldron/johnny-five/graphs/contributors) of Johnny-Five.
+### OMG you made it to the bottom of this
+
++ [oled-js is published on npm](https://www.npmjs.org/package/oled-js)!
++ there was a tonne of stuff I needed to learn along the way to write this library - embrace those moments when you have no idea what you're doing.
++ teach others what you know if you can, don't keep that fresh new knowledge to yourself 
++ the grid for the screen diagrams came from [here](http://www.garrettbartley.com/graphpaper.html) - really cool canvas app
++ thank you to [Rick Waldron](https://github.com/rwaldron) and the [other amazing authors](https://github.com/rwaldron/johnny-five/graphs/contributors) of Johnny-Five.
++ you are awesome.
