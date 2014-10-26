@@ -1,10 +1,6 @@
-post about oledjs
+It all started with one of those projects you never actually start on, let alone complete. You know the type I mean.
 
-
-
-It all started with one of those projects you NEVER actually start on, let alone complete. You know the type I mean.
-
-My nemesis in this scenario is to make my own watch. Not to sell, just to make one for myself. I've bought a lot of hardware for it, but every time I'm satisfied with the new approach, something else comes along that seems cooler or smaller, or easier. Check out this photo below of only part of the 'collection' I've acquired just trying to start on this thing:
+My nemesis in this scenario is to make my own watch. Not to sell, just to make one for myself. I've bought a lot of hardware for it, but every time I'm satisfied with the new approach, something else comes along that seems cooler, or smaller, or easier. Check out this photo below of only part of the 'collection' I've acquired just trying to start on this thing:
 
 ![collection of bits](http://f.cl.ly/items/0K0j1s0m3k3X062y3C0g/watch-collection.png)
 
@@ -12,9 +8,11 @@ I am sure I'll start on it one day (hahahaha) BUT this nemesis project did lead 
 
 There are three OLED screens in the picture above. These screens are pretty sweet. They run on minimal power, they're compact, and very bright despite the low power draw. Most of them use a common driver/controller, and I think they look really cool when used in wearables. The current end goal is to run one as a watch display, powered by an Arduino and a rechargable LiPo battery.
 
-Normally when I want to play with a new piece of Arduino compatible technology, I look up the class to use within the really cool hardware library [Johnny-Five](https://github.com/rwaldron/johnny-five). Johnny-Five is a NodeJS library which lets you write javascript to interface with an Arduino and any hardware attached to it, such as sensors, screens, motors etc. It's really useful to create both prototypes and end products alike. So I jump into the johnny-five docs and look around only to discover that there's no class for playing with OLED screens. Bummer! A quick look through the issues confirms this, and so I'm thinking I'll have to just write Arduino code and do the sorta clumsy save -> compile -> upload workflow when developing for Arduino projects.
+Normally when I want to play with a new piece of Arduino compatible technology, I look up the class to use within the really cool hardware library [Johnny-Five](https://github.com/rwaldron/johnny-five). Johnny-Five is a NodeJS library which enables you to write JavaScript to interface with an Arduino and any hardware attached to it, such as sensors, screens, motors etc. It's really useful to create both prototypes and end products alike. 
 
-However I've been wanting to contribute to a large project like Johnny-Five for a while now. It's been so cool to use this framework with a number of personal projects (not to mention [Las Vegas Nodebots Day](http://nodebotsdaylv.com/) each year), that I wanted to see if I could help extend its use.
+I jump into the docs and look around only to discover that there's no class for playing with OLED screens. Bummer! A quick look through the issues confirms this, and so I'm thinking I'll have to just write Arduino code and do the sorta clumsy save -> compile -> upload workflow when developing for Arduino projects.
+
+However I've been wanting to contribute to a large project like Johnny-Five for a while now. It's been so cool to use this framework with a number of personal projects (not to mention [Las Vegas Nodebots Day](http://nodebotsdaylv.com/) each year), and I wanted to see if I could help extend its use.
 
 And so on and off for the past six weeks I've been attempting to code a drop in library for controlling OLED screens with JavaScript. What came out the other end was [oled-js](https://github.com/noopkat/oled-js).
 
@@ -98,7 +96,7 @@ Above shows the bit values within our byte, when 4 pixels have been filled in. S
 
 To sum up: pixels are painted on the screen in sets of 8 bits, within a byte. Each byte is painted in the next column over from the last. 
 
-Because a byte is reponsible for writing muliple pixels in a vertical fashion, a concept known a row or 'page' enters. Each page is 8 pixels high. Our first byte is in page 0. See the picture below to understand:
+Because a byte is reponsible for writing muliple pixels in a vertical fashion, a concept known as a row or 'page' enters. Each page is 8 pixels high. Our first byte is in page 0. See the picture below to understand:
 
 ![screen 5](http://cl.ly/image/2t1D2l2S000v/oled-screen05.png)
 
@@ -106,7 +104,7 @@ In our example screen we're using, to write an entire row or 'page' of pixels wi
 
 I add another byte in the picture below, which is located in page 1:
 
-![screen 6](http://cl.ly/image/2Q2A0m373W2V/oled-screen06.png)
+{<9>}![screen 6](http://cl.ly/image/2Q2A0m373W2V/oled-screen06.png)
 
 What number byte in our framebuffer is this new byte I added? You can count from left to right in the diagram starting from byte 0. It is byte 55. 
 
@@ -164,7 +162,7 @@ Now that we know the position, we need to apply a bitwise operation to find the 
 
 Bit shifting against a mask is the most common way to pull out a bit's value. Shifting a byte's bits right once looks like this:
 
-![shift right](http://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Rotate_right_logically.svg/150px-Rotate_right_logically.svg.png)
+![shift right](http://meow.noopkat.com/content/images/2014/Oct/bitshift2.png)
 
 As you can see above, a 0 is pegged onto position 7, every bit moves right 1 spot, and the bit in position 0 actually drops off and is discarded.
 
