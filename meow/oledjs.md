@@ -12,9 +12,9 @@ I am sure I'll start on it one day (hahahaha) BUT this nemesis project did lead 
 
 There are three OLED screens in the picture above. These screens are pretty sweet. They run on minimal power, they're compact, and very bright despite the low power draw. Most of them use a common driver/controller, and I think they look really cool when used in wearables. The current end goal is to run one as a watch display, powered by an Arduino and a rechargable LiPo battery.
 
-Normally when I want to play with a sweet new piece of Arduino compatible technology, I look up the class to use within the really cool hardware library [Johnny-Five](https://github.com/rwaldron/johnny-five). Johnny-Five is a NodeJS library which lets you write javascript to interface with Arduino and any hardware attached to it, such as sensors, screens, motors etc. It's really useful to create both prototypes and end products alike. So I jump into the johnny-five docs and look around only to discover that there's no class for playing with OLED screens. Bummer! A quick look through the issues confirms this, and so I'm thinking I'll have to just write Arduino code and do the sorta clumsy save -> compile -> upload workflow when developing for Arduino projects.
+Normally when I want to play with a new piece of Arduino compatible technology, I look up the class to use within the really cool hardware library [Johnny-Five](https://github.com/rwaldron/johnny-five). Johnny-Five is a NodeJS library which lets you write javascript to interface with an Arduino and any hardware attached to it, such as sensors, screens, motors etc. It's really useful to create both prototypes and end products alike. So I jump into the johnny-five docs and look around only to discover that there's no class for playing with OLED screens. Bummer! A quick look through the issues confirms this, and so I'm thinking I'll have to just write Arduino code and do the sorta clumsy save -> compile -> upload workflow when developing for Arduino projects.
 
-However I've been wanting to contribute to a cool project like Johnny-Five for a while now. It's been so cool to use this framework with a number of personal projects (not to mention Las Vegas Nodebots Day each year), that I wanted to give back as a way of saying thank you to [Rick Waldron](https://github.com/rwaldron) and the [other amazing authors](https://github.com/rwaldron/johnny-five/graphs/contributors) of Johnny-Five.
+However I've been wanting to contribute to a large project like Johnny-Five for a while now. It's been so cool to use this framework with a number of personal projects (not to mention [Las Vegas Nodebots Day](http://nodebotsdaylv.com/) each year), that I wanted to see if I could help extend its use.
 
 And so on and off for the past six weeks I've been attempting to code a drop in library for controlling OLED screens with JavaScript. What came out the other end was [oled-js](https://github.com/noopkat/oled-js).
 
@@ -94,7 +94,7 @@ But what if we put some pixels in there?
 
 ![screen 4](http://cl.ly/image/2Y0E420p0N0t/oled-screen04.png)
 
-Above shows the bit values within our byte, when 3 pixels have been filled in. So what would our byte value be now? The answer is **00011101**. Notice anything? "It's written in reverse to what I was expecting!" you say. Well spotted! Why? We'll cover this in more depth later, but essentially the positions of our bits need to be counted from right to left.
+Above shows the bit values within our byte, when 4 pixels have been filled in. So what would our byte value be now? The answer is **00011101**. Notice anything? "It's written in reverse to what I was expecting!" you say. Well spotted! Why? We'll cover this in more depth later, but essentially the positions of our bits need to be counted from right to left.
 
 To sum up: pixels are painted on the screen in sets of 8 bits, within a byte. Each byte is painted in the next column over from the last. 
 
@@ -119,4 +119,86 @@ Bonus point: what is the value of our new byte?
 
 (the answer is **10111110**)
 
+Now you understand the basics of an OLED display and how it interprets incoming data.
 
+### A closer look at the framebuffer
+
+Here is a 48 x 24 image we might want to display on the screen:
+
+<img src="http://cl.ly/image/371h0G04192U/ok.png" style="border: 1px solid #bbb" alt="image with noop text written within it"/>
+
+And here is how it is represented as bytes in the framebuffer:
+
+```
+[0xFF, 0xFF, 0xFF, 0x7F, 0x7F, 0xFF, 0xFF, 0x7F, 0x7F, 0x7F, 0xFF, 0xFF, 
+0xFF, 0xFF, 0xFF, 0xFF, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0xFF, 0xFF, 0xFF, 
+0xFF, 0xFF, 0xFF, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF, 
+0x7F, 0x7F, 0xFF, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF, 
+0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x1, 0xFE, 0xF8, 0x0, 0x1, 0x0, 0x10, 
+0xEF, 0x2D, 0x7F, 0x1A, 0xF8, 0xFA, 0xF8, 0x88, 0x88, 0xB9, 0xFF, 0xE7, 
+0x5, 0x27, 0x1A, 0xF8, 0xFA, 0xF8, 0x88, 0x88, 0x99, 0xAD, 0x5A, 0x5A, 
+0xF0, 0xB0, 0xF2, 0x70, 0x3C, 0x20, 0x4, 0xC2, 0xC7, 0xFF, 0xFF, 0xFF, 
+0xFF, 0xFF, 0xFC, 0xFC, 0xFC, 0xFC, 0xFF, 0xFF, 0xFC, 0xFC, 0xFC, 0xFE, 
+0xFC, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xF5, 0xE5, 
+0xED, 0xFC, 0xFC, 0xFE, 0xFE, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+```
+
+We know a couple of things looking at this. One is that any byte with a value of **0xFF** indicates that it contains only white or 'on' pixels. This is because when you convert 0xFF hex to binary you get **11111111**. That's 8 'on' pixels, as we covered earlier.
+
+We also know that any byte in there with a value of **0x0** or **0x00** contains only black or 'off' pixels. This is because when you convert **0x0** hex to binary you get, yep, you guessed it - **00000000**.
+
+Let's convert another. Take **0x7F** for example. Converting that to binary equates to **01111111**. This byte contains 1 black or 'off' pixel, and the remainder are white or 'on'.
+
+Easy peasy!
+
+### Manipulating bits and bytes
+
+How do we find out the bit values within a byte using JavaScript? 
+
+Let's say we're trying to read just one bit within a byte. I do this in oled-js to look for a certain bit value in a response byte I can read from the screen itself. This specific bit acts as a flag to let me know if the chip is busy or ready for more data. 0 is ready, 1 is busy.
+
+Firstly, we need to know the position of that bit (0-7). Let's say, we want to read the bit in position 5. Position 5 is the third spot from the far left bit in our byte (we covered this briefly earlier).
+
+Now that we know the position, we need to apply a bitwise operation to find the value. Bitwise is a very broad and complicated topic, so we'll just stick to what's happening in this specific task only. I highly recommend reading the basics on [Wikipedia](http://en.wikipedia.org/wiki/Bitwise_operation), then following up with the [MDN explanation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators) for the JavaScript implentation.
+
+Bit shifting against a mask is the most common way to pull out a bit's value. Shifting a byte's bits right once looks like this:
+
+![shift right](http://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Rotate_right_logically.svg/150px-Rotate_right_logically.svg.png)
+
+As you can see above, a 0 is pegged onto position 7, every bit moves right 1 spot, and the bit in position 0 actually drops off and is discarded.
+
+In this example, we're going to shift the bits in the byte right until bit 5 is sitting at position 0. You'll see why in the next step.
+
+Let's work with this byte - **01100101**, or **0x65**. We'll shift the bits over 5 places so that the bit at position 5 is now sitting at position 0:
+
+```javascript
+var byte = 0x65;
+var newByte = (byte >> 5); // 00000011
+```
+
+A total of 5 zeros will now be shifted in from the left, forcing the bits to the right. Bit 5's position is now position 0.
+
+Now, we're going to use the '&' operator to compare this bit against the mask of 1. The '&' operator in bitwise will return a 1 if the bit in line with it is equal to 1. It will return a 0 if not equal to a 1. This may not make sense if you have not read the suggested resources mentioned earlier.
+
+```javascript
+var byte = 0x65;
+var newByte = (byte >> 5); // 00000011
+var busy = newByte & 1; // 1
+```
+
+The comparison can be represented visually. The top number is the mask (1 in binary), and the bottom value is our shifted byte.
+
+```
+  00000001
+& 00000011
+  --------
+  00000001
+```
+
+As you can see, the result is equal to the binary representation of 1. So our busy byte is equal to 1 (the chip is busy!).
+
+
+
+----
+Lastly: thank you to [Rick Waldron](https://github.com/rwaldron) and the [other amazing authors](https://github.com/rwaldron/johnny-five/graphs/contributors) of Johnny-Five.
